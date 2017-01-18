@@ -38,7 +38,7 @@ namespace Steam_Lite_Project
             {
                 dataGridView1.Rows.Add(game.title, game.price + "$");
             }
-
+            
             UpdateGameDataBox(dataGridView1.Rows[0].Cells[0].Value.ToString());
         }
 
@@ -58,7 +58,7 @@ namespace Steam_Lite_Project
 
             textBox4.Text = SQLManager.GetState(game.SID);
 
-
+            richTextBox3.Text = SQLManager.GetTags(game.GID);
         }
         
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)

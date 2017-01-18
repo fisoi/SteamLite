@@ -312,15 +312,15 @@ namespace Steam_Lite_Project
                 }
 
                 myReader.Close();
-                
-                myCommand = new SqlCommand("SELECT * FROM Tags", myConnection);
-                SqlDataReader myReader2 = myCommand.ExecuteReader();
+
+                SqlCommand myCommand2 = new SqlCommand("SELECT * FROM Tags", myConnection);
+                SqlDataReader myReader2 = myCommand2.ExecuteReader();
 
                 string result = null;
 
                 while (myReader2.Read())
                 {
-                    for (int index = 0; index < result.Length; index++)
+                    for (int index = 0; index < resultID.Count; index++)
                     {
                         if (int.Parse(myReader2["TID"].ToString()) == resultID[index])
                             result += myReader2["tagName"].ToString() + " ";
