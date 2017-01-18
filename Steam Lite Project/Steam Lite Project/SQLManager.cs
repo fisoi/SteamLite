@@ -214,6 +214,33 @@ namespace Steam_Lite_Project
                 return null;
             }
         }
+
+        public static Game GetGame(string gameTitle)
+        {
+            try
+            {
+                SqlParameter myParam1 = new SqlParameter("@param1", SqlDbType.VarChar, gameTitle.Length);
+                myParam1.Value = gameTitle;
+
+                SqlCommand myCommand = new SqlCommand("SELECT * FROM Games", myConnection);
+                myCommand.Parameters.Add(myParam1);
+
+                SqlDataReader myReader = myCommand.ExecuteReader();
+
+                myReader.Read();
+                Game result = new Game(int.Parse(myReader["GID"].ToString()), int.Parse(myReader["SID"].ToString()), int.Parse(myReader["PID"].ToString()),
+                    myReader["title"].ToString(), myReader["description"].ToString(), float.Parse(myReader["price"].ToString()), 
+                    myReader["releaseDate"].ToString(), int.Parse(myReader["reviewsAmount"].ToString()), float.Parse(myReader["reviewScore"].ToString()));
+
+                myReader.Close();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return null;
+            }
+        }
     }
 }
 

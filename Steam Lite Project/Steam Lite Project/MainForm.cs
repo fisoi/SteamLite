@@ -36,8 +36,28 @@ namespace Steam_Lite_Project
 
             foreach(GameItem game in shopGames)
             {
-                dataGridView1.Rows.Add(game.title, game.price);
+                dataGridView1.Rows.Add(game.title, game.price + "$");
             }
+
+            UpdateGameDataBox(dataGridView1.Rows[0].Cells[0].ToString());
+        }
+
+        private void UpdateGameDataBox(string gameTitle)
+        {
+            label1.Text = gameTitle;
+
+            Game game = SQLManager.GetGame(gameTitle);
+
+            richTextBox1.Text = game.description;
+            textBox1.Text = game.releaseDate;
+            textBox3.Text = game.reviewScore.ToString();
+
+            label6.Text = "Price: " + game.price.ToString() + "$";
+        }
+        
+        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        {
+            UpdateGameDataBox(dataGridView1.SelectedRows[0].Cells[0].ToString());
         }
     }
 }
