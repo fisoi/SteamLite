@@ -92,6 +92,7 @@
             this.label16 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
+            this.richTextBox4 = new System.Windows.Forms.RichTextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
@@ -186,6 +187,7 @@
             // groupBox1
             // 
             this.groupBox1.BackColor = System.Drawing.Color.SlateGray;
+            this.groupBox1.Controls.Add(this.richTextBox4);
             this.groupBox1.Controls.Add(this.label13);
             this.groupBox1.Controls.Add(this.richTextBox3);
             this.groupBox1.Controls.Add(this.button2);
@@ -226,7 +228,7 @@
             this.richTextBox3.Name = "richTextBox3";
             this.richTextBox3.Size = new System.Drawing.Size(456, 52);
             this.richTextBox3.TabIndex = 13;
-            this.richTextBox3.Text = "";
+            this.richTextBox3.Text = "tag";
             // 
             // button2
             // 
@@ -261,7 +263,7 @@
             // 
             this.textBox4.BackColor = System.Drawing.Color.LightSlateGray;
             this.textBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox4.Location = new System.Drawing.Point(392, 138);
+            this.textBox4.Location = new System.Drawing.Point(392, 175);
             this.textBox4.Name = "textBox4";
             this.textBox4.ReadOnly = true;
             this.textBox4.Size = new System.Drawing.Size(82, 20);
@@ -271,7 +273,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.label5.Location = new System.Drawing.Point(264, 141);
+            this.label5.Location = new System.Drawing.Point(264, 178);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(64, 13);
             this.label5.TabIndex = 8;
@@ -281,7 +283,7 @@
             // 
             this.textBox3.BackColor = System.Drawing.Color.LightSlateGray;
             this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox3.Location = new System.Drawing.Point(392, 112);
+            this.textBox3.Location = new System.Drawing.Point(392, 149);
             this.textBox3.Name = "textBox3";
             this.textBox3.ReadOnly = true;
             this.textBox3.Size = new System.Drawing.Size(82, 20);
@@ -291,7 +293,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.label4.Location = new System.Drawing.Point(264, 115);
+            this.label4.Location = new System.Drawing.Point(264, 152);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(80, 13);
             this.label4.TabIndex = 6;
@@ -345,7 +347,7 @@
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Size = new System.Drawing.Size(225, 135);
             this.richTextBox1.TabIndex = 1;
-            this.richTextBox1.Text = "";
+            this.richTextBox1.Text = "Game description.";
             // 
             // label1
             // 
@@ -786,6 +788,16 @@
             this.label14.TabIndex = 1;
             this.label14.Text = "PROFILE NAME";
             // 
+            // richTextBox4
+            // 
+            this.richTextBox4.BackColor = System.Drawing.Color.LightSlateGray;
+            this.richTextBox4.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBox4.Location = new System.Drawing.Point(267, 112);
+            this.richTextBox4.Name = "richTextBox4";
+            this.richTextBox4.Size = new System.Drawing.Size(207, 31);
+            this.richTextBox4.TabIndex = 15;
+            this.richTextBox4.Text = "Publisher description.";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -881,5 +893,6 @@
         private System.Windows.Forms.TextBox textBox10;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.RichTextBox richTextBox4;
     }
 }
