@@ -15,6 +15,7 @@ namespace Steam_Lite_Project
         public SignInForm()
         {
             InitializeComponent();
+            SQLManager.InitConnection();
 
             comboBox1.SelectedIndex = 0;
         }
@@ -27,7 +28,10 @@ namespace Steam_Lite_Project
             }
             else
             {
-                //QUERY
+                SQLManager.CheckSignIn();
+
+                MainForm form = new MainForm();
+                form.Show();
             }
         }
 
