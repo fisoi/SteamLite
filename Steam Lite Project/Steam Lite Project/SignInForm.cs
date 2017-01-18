@@ -28,10 +28,11 @@ namespace Steam_Lite_Project
             }
             else
             {
-                SQLManager.CheckSignIn();
-
-                MainForm form = new MainForm();
-                form.Show();
+                if (SQLManager.CheckSignIn(textBox1.Text, textBox2.Text))
+                {
+                    MainForm form = new MainForm();
+                    form.Show();
+                }
             }
         }
 

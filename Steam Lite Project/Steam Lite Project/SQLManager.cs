@@ -28,27 +28,36 @@ namespace Steam_Lite_Project
             }
         }
 
-        public static bool CheckSignIn()
+        public static bool CheckSignIn(string username, string password)
         {
             try
             {
                 SqlDataReader myReader = null;
 
-                SqlCommand myCommand = new SqlCommand("SELECT * FROM Users", myConnection);
+                SqlParameter myParam = new SqlParameter("@param", SqlDbType.VarChar, username.Length);
+                myParam.Value = username;
+
+                SqlCommand myCommand = new SqlCommand("SELECT * FROM Users WHERE username=@param", myConnection);
+                myCommand.Parameters.Add(myParam);
+
                 myReader = myCommand.ExecuteReader();
 
-                while (myReader.Read())
+                if (myReader.HasRows)
                 {
-                    Console.WriteLine(myReader["UID"].ToString() + " " + myReader["username"].ToString() + " " + myReader["password"].ToString());
+                    if (myReader["password"].ToString() == password)
+                    {
+                        return true;
+                    }
+                    MessageBox.Show("Password invalid!");
                 }
-
-                return true;
+                else MessageBox.Show("Username invalid!");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                MessageBox.Show(ex.ToString());
                 return false;
             }
+            return false;
         }
     }
 }
