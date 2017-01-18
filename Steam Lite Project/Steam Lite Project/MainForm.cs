@@ -44,7 +44,18 @@ namespace Steam_Lite_Project
             UpdateGameDataBox(dataGridView1.Rows[0].Cells[0].Value.ToString());
 
             //LIBRARY
+            UpdateLibrary();
+        }
 
+        private void UpdateLibrary()
+        {
+            dataGridView3.Rows.Clear();
+            List<LibraryGame> libraryGames = SQLManager.GetLibrary(loggedUser);
+
+            foreach (LibraryGame game in libraryGames)
+            {
+                dataGridView2.Rows.Add(SQLManager.GetGameFromID(game.GID), game.hoursPlayed, (game.installed ? "Install" : "Uninstall"));
+            }
         }
 
         private void UpdateWishlist()

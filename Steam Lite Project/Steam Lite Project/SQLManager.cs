@@ -220,18 +220,7 @@ namespace Steam_Lite_Project
             try
             {
                 //GET USER ID FROM USERNAME
-                SqlParameter myParam1 = new SqlParameter("@param1", SqlDbType.VarChar, username.Length);
-                myParam1.Value = username;
-
-                SqlCommand myCommand = new SqlCommand("SELECT * FROM Users WHERE username=@param1", myConnection);
-                myCommand.Parameters.Add(myParam1);
-
-                SqlDataReader myReader = myCommand.ExecuteReader();
-
-                myReader.Read();
-                string userID = myReader["UID"].ToString();
-
-                myReader.Close();
+                string userID = UserIDFromName(username);
 
                 //GET GAME ID'S FOR CURRENT UID
                 SqlCommand myCommand1 = new SqlCommand("SELECT * FROM Wishlist WHERE UID=" + userID, myConnection);
@@ -263,7 +252,7 @@ namespace Steam_Lite_Project
             }
         }
 
-        public static void InsertWish(string username, string gameTitle)
+        public static string UserIDFromName(string username)
         {
             try
             {
@@ -280,6 +269,22 @@ namespace Steam_Lite_Project
                 string userID = myReader["UID"].ToString();
 
                 myReader.Close();
+
+                return userID;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return null;
+            }
+        }
+
+        public static void InsertWish(string username, string gameTitle)
+        {
+            try
+            {
+                //GET USER ID FROM USERNAME
+                string userID = UserIDFromName(username);
 
                 //GET GAME ID FROM GAMES
                 SqlParameter myParam2 = new SqlParameter("@param2", SqlDbType.VarChar, gameTitle.Length);
@@ -305,6 +310,35 @@ namespace Steam_Lite_Project
                 MessageBox.Show(ex.ToString());
                 return;
             }
+        }
+
+        public static List<LibraryGame> GetLibrary(string username)
+        {
+            try
+            {
+                //GET USER ID FROM USERNAME
+                string userID = UserIDFromName(username);
+
+                //GET LIBRARY GAMES
+                SqlCommand myCommand = new SqlCommand("SELECT * FROM UserGames WHERE UID=" + userID, myConnection);
+                SqlDataReader myReader = myCommand.ExecuteReader();
+
+                List<LibraryGame> result = new List<LibraryGame>();
+
+                while (myReader.Read())
+                {
+                    result.Add(new LibraryGame(myReader["UID"].ToString(), myReader["GID"].ToString(), bool.Parse(myReader["installed"].ToString()), myReader["hoursPlayed"].ToString()));
+                }
+
+                myReader.Close();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return null;
+            }
+
         }
 
         public static Game GetGame(string gameTitle)
