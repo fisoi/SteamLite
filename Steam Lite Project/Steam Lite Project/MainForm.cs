@@ -47,12 +47,18 @@ namespace Steam_Lite_Project
             label1.Text = gameTitle;
 
             Game game = SQLManager.GetGame(gameTitle);
-
             richTextBox1.Text = game.description;
             textBox1.Text = game.releaseDate;
             textBox3.Text = game.reviewScore.ToString();
-
             label6.Text = "Price: " + game.price.ToString() + "$";
+
+            Publisher publisher = SQLManager.GetPublisher(game.PID);
+            textBox2.Text = publisher.publisherName;
+            richTextBox4.Text = publisher.description;
+
+            textBox4.Text = SQLManager.GetState(game.SID);
+
+
         }
         
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)

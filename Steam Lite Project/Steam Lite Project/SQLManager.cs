@@ -241,6 +241,101 @@ namespace Steam_Lite_Project
                 return null;
             }
         }
+
+        public static Publisher GetPublisher(int ID)
+        {
+            try
+            {
+                SqlParameter myParam1 = new SqlParameter("@param1", SqlDbType.Int);
+                myParam1.Value = ID;
+
+                SqlCommand myCommand = new SqlCommand("SELECT * FROM Publishers WHERE PID=@param1", myConnection);
+                myCommand.Parameters.Add(myParam1);
+
+                SqlDataReader myReader = myCommand.ExecuteReader();
+
+                myReader.Read();
+                Publisher result = new Publisher(int.Parse(myReader["PID"].ToString()), myReader["publisherName"].ToString(),
+                    myReader["companyName"].ToString(), myReader["description"].ToString());
+
+                myReader.Close();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return null;
+            }
+        }
+
+        public static string GetState(int ID)
+        {
+            try
+            {
+                SqlParameter myParam1 = new SqlParameter("@param1", SqlDbType.Int);
+                myParam1.Value = ID;
+
+                SqlCommand myCommand = new SqlCommand("SELECT * FROM GameState WHERE SID=@param1", myConnection);
+                myCommand.Parameters.Add(myParam1);
+
+                SqlDataReader myReader = myCommand.ExecuteReader();
+
+                myReader.Read();
+                string result = myReader["name"].ToString();
+
+                myReader.Close();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return null;
+            }
+        }
+        public static string GetTags(int GID)
+        {
+            try
+            {
+                SqlParameter myParam1 = new SqlParameter("@param1", SqlDbType.Int);
+                myParam1.Value = GID;
+
+                SqlCommand myCommand = new SqlCommand("SELECT * FROM GameTag WHERE GID=@param1", myConnection);
+                myCommand.Parameters.Add(myParam1);
+
+                SqlDataReader myReader = myCommand.ExecuteReader();
+
+                List<int> resultID = new List<int>();
+
+                while (myReader.Read())
+                {
+                    resultID.Add(int.Parse(myReader["TID"].ToString()));
+                }
+
+                myReader.Close();
+                
+                myCommand = new SqlCommand("SELECT * FROM Tags", myConnection);
+                SqlDataReader myReader2 = myCommand.ExecuteReader();
+
+                string result = null;
+
+                while (myReader2.Read())
+                {
+                    for (int index = 0; index < result.Length; index++)
+                    {
+                        if (int.Parse(myReader2["TID"].ToString()) == resultID[index])
+                            result += myReader2["tagName"].ToString() + " ";
+                    }
+                }
+
+                myReader2.Close();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return null;
+            }
+        }
     }
 }
 
