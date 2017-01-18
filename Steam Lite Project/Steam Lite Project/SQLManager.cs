@@ -28,6 +28,11 @@ namespace Steam_Lite_Project
             }
         }
 
+        public static void CloseConnection()
+        {
+            myConnection.Close()
+        }
+
         public static bool CheckSignIn(string username, string password)
         {
             try
@@ -51,6 +56,8 @@ namespace Steam_Lite_Project
                     MessageBox.Show("Password invalid!");
                 }
                 else MessageBox.Show("Username invalid!");
+
+                myReader.Close();
             }
             catch (Exception ex)
             {

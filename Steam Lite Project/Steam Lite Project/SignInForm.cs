@@ -43,5 +43,10 @@ namespace Steam_Lite_Project
 
             this.Hide();
         }
+
+        private void SignInForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+
+        }
     }
 }

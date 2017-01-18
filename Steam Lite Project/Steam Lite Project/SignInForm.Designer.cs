@@ -114,6 +114,7 @@
             this.MaximizeBox = false;
             this.Name = "SignInForm";
             this.ShowIcon = false;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SignInForm_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
