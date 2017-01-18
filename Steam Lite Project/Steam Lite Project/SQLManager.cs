@@ -40,15 +40,11 @@ namespace Steam_Lite_Project
             {
                 SqlParameter myParam1 = new SqlParameter("@param1", SqlDbType.VarChar, username.Length);
                 myParam1.Value = username;
-
-                SqlParameter myParam2 = new SqlParameter("@param2", SqlDbType.VarChar, 10);
-                if(isPublisher) myParam2.Value = "Publishers";
-                else myParam2.Value = "Users";
                 
-                SqlCommand myCommand = new SqlCommand("SELECT * FROM @param2 WHERE username=@param1", myConnection);
+                SqlCommand myCommand = new SqlCommand("SELECT * FROM " + (isPublisher? "Publishers" : "Users") + " WHERE username=@param1", myConnection); 
 
-                myCommand.Parameters.AddRange(new SqlParameter[] { myParam1, myParam2 });
-
+                myCommand.Parameters.Add(myParam1);
+                
                 SqlDataReader myReader = myCommand.ExecuteReader();
 
                 if (myReader.HasRows)
