@@ -78,7 +78,7 @@ namespace Steam_Lite_Project
         {
             try
             {
-                SqlCommand myCommand = new SqlCommand("SELECT * FROM Countryes", myConnection);
+                SqlCommand myCommand = new SqlCommand("SELECT * FROM Countries", myConnection);
                 SqlDataReader myReader = myCommand.ExecuteReader();
 
                 List<Country> result = new List<Country>();
@@ -102,7 +102,7 @@ namespace Steam_Lite_Project
         {
             try
             {
-                SqlCommand myCommand = new SqlCommand("SELECT * FROM Countryes", myConnection);
+                SqlCommand myCommand = new SqlCommand("SELECT * FROM Countries", myConnection);
                 SqlDataReader myReader = myCommand.ExecuteReader();
                 
                 while (myReader.Read())
@@ -144,7 +144,7 @@ namespace Steam_Lite_Project
                 SqlParameter myParam5 = new SqlParameter("@param5", SqlDbType.Int);
                 myParam5.Value = countryID;
 
-                SqlCommand myCommand = new SqlCommand("INSERT INTO Users (username,password,profileName,CID,email) VALUES (@param1,@param3,@param4,@param5,,@param2)", myConnection);
+                SqlCommand myCommand = new SqlCommand("INSERT INTO Users (username,password,profileName,CID,email) VALUES (@param1,@param3,@param4,@param5,@param2)", myConnection);
                 myCommand.Parameters.AddRange(new SqlParameter[] { myParam1, myParam2, myParam3, myParam4, myParam5 });
 
                 myCommand.ExecuteNonQuery();
