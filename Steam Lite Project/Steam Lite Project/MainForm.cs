@@ -30,6 +30,7 @@ namespace Steam_Lite_Project
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            //SHOP
             this.Text = "Steam Lite " + loggedUser;
 
             List<GameItem> shopGames = SQLManager.GetShopGames();
@@ -41,10 +42,14 @@ namespace Steam_Lite_Project
 
             UpdateWishlist();
             UpdateGameDataBox(dataGridView1.Rows[0].Cells[0].Value.ToString());
+
+            //LIBRARY
+
         }
 
         private void UpdateWishlist()
         {
+            dataGridView2.Rows.Clear();
             List<GameItem> wishlistGames = SQLManager.GetWishlistGames(loggedUser);
 
             foreach (GameItem game in wishlistGames)
@@ -74,14 +79,21 @@ namespace Steam_Lite_Project
         
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
-            UpdateGameDataBox(dataGridView1.SelectedRows[0].Cells[0].Value.ToString());
-            button2.Enabled = true;
+
+            if (dataGridView1.Rows.Count > 0 && dataGridView1.SelectedRows.Count > 0)
+            {
+                UpdateGameDataBox(dataGridView1.SelectedRows[0].Cells[0].Value.ToString());
+                button2.Enabled = true;
+            }
         }
 
         private void dataGridView2_SelectionChanged(object sender, EventArgs e)
         {
-            UpdateGameDataBox(dataGridView2.SelectedRows[0].Cells[0].Value.ToString());
-            button2.Enabled = false;
+            if (dataGridView2.Rows.Count > 0 && dataGridView2.SelectedRows.Count > 0)
+            {
+                UpdateGameDataBox(dataGridView2.SelectedRows[0].Cells[0].Value.ToString());
+                button2.Enabled = false;
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -96,6 +108,7 @@ namespace Steam_Lite_Project
             }
 
             SQLManager.InsertWish(loggedUser, dataGridView1.SelectedRows[0].Cells[0].Value.ToString());
+            UpdateWishlist();
         }
     }
 }
