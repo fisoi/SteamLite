@@ -30,27 +30,28 @@ namespace Steam_Lite_Project
 
         public static void CloseConnection()
         {
-            myConnection.Close()
+            myConnection.Close();
         }
 
         public static bool CheckSignIn(string username, string password)
         {
             try
             {
-                SqlDataReader myReader = null;
-
                 SqlParameter myParam = new SqlParameter("@param", SqlDbType.VarChar, username.Length);
                 myParam.Value = username;
 
                 SqlCommand myCommand = new SqlCommand("SELECT * FROM Users WHERE username=@param", myConnection);
                 myCommand.Parameters.Add(myParam);
 
-                myReader = myCommand.ExecuteReader();
+                SqlDataReader myReader = myCommand.ExecuteReader();
 
                 if (myReader.HasRows)
                 {
+                    myReader.Read();
                     if (myReader["password"].ToString() == password)
                     {
+                        myReader.Close();
+
                         return true;
                     }
                     MessageBox.Show("Password invalid!");
