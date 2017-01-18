@@ -69,7 +69,7 @@ namespace Steam_Lite_Project
             }
             return false;
         }
-
+        
         public static List<Country> GetCountryes()
         {
             try
@@ -215,6 +215,98 @@ namespace Steam_Lite_Project
             }
         }
 
+        public static List<GameItem> GetWishlistGames(string username)
+        {
+            try
+            {
+                //GET USER ID FROM USERNAME
+                SqlParameter myParam1 = new SqlParameter("@param1", SqlDbType.VarChar, username.Length);
+                myParam1.Value = username;
+
+                SqlCommand myCommand = new SqlCommand("SELECT * FROM Users WHERE username=@param1", myConnection);
+                myCommand.Parameters.Add(myParam1);
+
+                SqlDataReader myReader = myCommand.ExecuteReader();
+
+                myReader.Read();
+                string userID = myReader["UID"].ToString();
+
+                myReader.Close();
+
+                //GET GAME ID'S FOR CURRENT UID
+                SqlCommand myCommand1 = new SqlCommand("SELECT * FROM Wishlist WHERE UID=" + userID, myConnection);
+                SqlDataReader myReader1 = myCommand1.ExecuteReader();
+
+                List<string> gameIDs = new List<string>();
+
+                while (myReader1.Read())
+                {
+                    gameIDs.Add(myReader1["GID"].ToString());
+                }
+
+                myReader1.Close();
+
+                List<GameItem> result = new List<GameItem>();
+
+                foreach(string ID in gameIDs)
+                {
+                    Game game = GetGameFromID(ID);
+                    result.Add(new GameItem(game.title, game.price));
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return null;
+            }
+        }
+
+        public static void InsertWish(string username, string gameTitle)
+        {
+            try
+            {
+                //GET USER ID FROM USERNAME
+                SqlParameter myParam1 = new SqlParameter("@param1", SqlDbType.VarChar, username.Length);
+                myParam1.Value = username;
+
+                SqlCommand myCommand = new SqlCommand("SELECT * FROM Users WHERE username=@param1", myConnection);
+                myCommand.Parameters.Add(myParam1);
+
+                SqlDataReader myReader = myCommand.ExecuteReader();
+
+                myReader.Read();
+                string userID = myReader["UID"].ToString();
+
+                myReader.Close();
+
+                //GET GAME ID FROM GAMES
+                SqlParameter myParam2 = new SqlParameter("@param2", SqlDbType.VarChar, gameTitle.Length);
+                myParam2.Value = gameTitle;
+
+                SqlCommand myCommand1 = new SqlCommand("SELECT * FROM Games WHERE title=@param2", myConnection);
+                myCommand.Parameters.Add(myParam2);
+
+                SqlDataReader myReader1 = myCommand1.ExecuteReader();
+
+                myReader1.Read();
+                string gameID = myReader1["GID"].ToString();
+
+                myReader1.Close();
+
+                //INSERT
+                SqlCommand myCommand2 = new SqlCommand("INSERT INTO Wishlist (UID,GID) VALUES (" + userID + "," + gameID + ")", myConnection);
+                myCommand2.ExecuteNonQuery();
+                return;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return;
+            }
+        }
+
         public static Game GetGame(string gameTitle)
         {
             try
@@ -230,6 +322,33 @@ namespace Steam_Lite_Project
                 myReader.Read();
                 Game result = new Game(int.Parse(myReader["GID"].ToString()), int.Parse(myReader["SID"].ToString()), int.Parse(myReader["PID"].ToString()),
                     myReader["title"].ToString(), myReader["description"].ToString(), float.Parse(myReader["price"].ToString()), 
+                    myReader["releaseDate"].ToString(), int.Parse(myReader["reviewsAmount"].ToString()), float.Parse(myReader["reviewScore"].ToString()));
+
+                myReader.Close();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return null;
+            }
+        }
+
+        public static Game GetGameFromID(string GID)
+        {
+            try
+            {
+                SqlParameter myParam1 = new SqlParameter("@param1", SqlDbType.VarChar, GID.Length);
+                myParam1.Value = GID;
+
+                SqlCommand myCommand = new SqlCommand("SELECT * FROM Games WHERE GID=@param1", myConnection);
+                myCommand.Parameters.Add(myParam1);
+
+                SqlDataReader myReader = myCommand.ExecuteReader();
+
+                myReader.Read();
+                Game result = new Game(int.Parse(myReader["GID"].ToString()), int.Parse(myReader["SID"].ToString()), int.Parse(myReader["PID"].ToString()),
+                    myReader["title"].ToString(), myReader["description"].ToString(), float.Parse(myReader["price"].ToString()),
                     myReader["releaseDate"].ToString(), int.Parse(myReader["reviewsAmount"].ToString()), float.Parse(myReader["reviewScore"].ToString()));
 
                 myReader.Close();

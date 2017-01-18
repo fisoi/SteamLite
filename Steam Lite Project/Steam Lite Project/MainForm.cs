@@ -38,8 +38,19 @@ namespace Steam_Lite_Project
             {
                 dataGridView1.Rows.Add(game.title, game.price + "$");
             }
-            
+
+            UpdateWishlist();
             UpdateGameDataBox(dataGridView1.Rows[0].Cells[0].Value.ToString());
+        }
+
+        private void UpdateWishlist()
+        {
+            List<GameItem> wishlistGames = SQLManager.GetWishlistGames(loggedUser);
+
+            foreach (GameItem game in wishlistGames)
+            {
+                dataGridView2.Rows.Add(game.title, game.price + "$");
+            }
         }
 
         private void UpdateGameDataBox(string gameTitle)
@@ -64,6 +75,27 @@ namespace Steam_Lite_Project
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
             UpdateGameDataBox(dataGridView1.SelectedRows[0].Cells[0].Value.ToString());
+            button2.Enabled = true;
+        }
+
+        private void dataGridView2_SelectionChanged(object sender, EventArgs e)
+        {
+            UpdateGameDataBox(dataGridView2.SelectedRows[0].Cells[0].Value.ToString());
+            button2.Enabled = false;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in dataGridView2.Rows)
+            {
+                if(row.Cells[0].Value.ToString() == dataGridView1.SelectedRows[0].Cells[0].Value.ToString())
+                {
+                    //game already on wishlist
+                    return;
+                }
+            }
+
+            SQLManager.InsertWish(loggedUser, dataGridView1.SelectedRows[0].Cells[0].Value.ToString());
         }
     }
 }
