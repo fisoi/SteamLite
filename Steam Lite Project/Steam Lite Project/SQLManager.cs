@@ -15,12 +15,7 @@ namespace Steam_Lite_Project
 
         public static void InitConnection()
         {
-            myConnection = new SqlConnection("user id=username;" +
-                "password=password;" +
-                "server=localhost;" +
-                "Trusted_Connection=yes;" +
-                "database=database; " +
-                "connection timeout=5");
+            myConnection = new SqlConnection(Properties.Settings.Default.SteamLiteConnectionString);
 
             try
             {
