@@ -222,7 +222,7 @@ namespace Steam_Lite_Project
                 SqlParameter myParam1 = new SqlParameter("@param1", SqlDbType.VarChar, gameTitle.Length);
                 myParam1.Value = gameTitle;
 
-                SqlCommand myCommand = new SqlCommand("SELECT * FROM Games", myConnection);
+                SqlCommand myCommand = new SqlCommand("SELECT * FROM Games WHERE title=@param1", myConnection);
                 myCommand.Parameters.Add(myParam1);
 
                 SqlDataReader myReader = myCommand.ExecuteReader();

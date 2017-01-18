@@ -39,7 +39,7 @@ namespace Steam_Lite_Project
                 dataGridView1.Rows.Add(game.title, game.price + "$");
             }
 
-            UpdateGameDataBox(dataGridView1.Rows[0].Cells[0].ToString());
+            UpdateGameDataBox(dataGridView1.Rows[0].Cells[0].Value.ToString());
         }
 
         private void UpdateGameDataBox(string gameTitle)
@@ -57,7 +57,7 @@ namespace Steam_Lite_Project
         
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
-            UpdateGameDataBox(dataGridView1.SelectedRows[0].Cells[0].ToString());
+            UpdateGameDataBox(dataGridView1.SelectedRows[0].Cells[0].Value.ToString());
         }
     }
 }
