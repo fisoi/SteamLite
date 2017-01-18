@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Steam_Lite_Project.DataModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -19,6 +20,13 @@ namespace Steam_Lite_Project
             InitializeComponent();
 
             this.signInForm = signInForm;
+
+            List<Country> countryes = SQLManager.GetCountryes();
+            foreach (Country country in countryes)
+            {
+                comboBox1.Items.Add(country.name);
+            }
+            comboBox1.SelectedIndex = 0;
         }
 
         private void UserRegisterForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -88,6 +96,15 @@ namespace Steam_Lite_Project
             signInForm = null;
 
             this.Close();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (SQLManager.Register(textBox1.Text, textBox2.Text, textBox3.Text, textBox5.Text, SQLManager.GetIDFromCountry(comboBox1.SelectedItem.ToString())))
+            {
+                this.Close();
+            }
+            else MessageBox.Show("Register failed!");
         }
     }
 }

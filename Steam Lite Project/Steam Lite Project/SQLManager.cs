@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 using System.Data;
+using Steam_Lite_Project.DataModels;
 
 namespace Steam_Lite_Project
 {
@@ -33,15 +34,20 @@ namespace Steam_Lite_Project
             myConnection.Close();
         }
 
-        public static bool CheckSignIn(string username, string password)
+        public static bool CheckSignIn(string username, string password, bool isPublisher)
         {
             try
             {
-                SqlParameter myParam = new SqlParameter("@param", SqlDbType.VarChar, username.Length);
-                myParam.Value = username;
+                SqlParameter myParam1 = new SqlParameter("@param1", SqlDbType.VarChar, username.Length);
+                myParam1.Value = username;
 
-                SqlCommand myCommand = new SqlCommand("SELECT * FROM Users WHERE username=@param", myConnection);
-                myCommand.Parameters.Add(myParam);
+                SqlParameter myParam2 = new SqlParameter("@param2", SqlDbType.VarChar, 10);
+                if(isPublisher) myParam2.Value = "Publishers";
+                else myParam2.Value = "Users";
+                
+                SqlCommand myCommand = new SqlCommand("SELECT * FROM @param2 WHERE username=@param1", myConnection);
+
+                myCommand.Parameters.AddRange(new SqlParameter[] { myParam1, myParam2 });
 
                 SqlDataReader myReader = myCommand.ExecuteReader();
 
@@ -66,6 +72,90 @@ namespace Steam_Lite_Project
                 return false;
             }
             return false;
+        }
+
+        public static List<Country> GetCountryes()
+        {
+            try
+            {
+                SqlCommand myCommand = new SqlCommand("SELECT * FROM Countryes", myConnection);
+                SqlDataReader myReader = myCommand.ExecuteReader();
+
+                List<Country> result = new List<Country>();
+                
+                while(myReader.Read())
+                {
+                    result.Add(new Country(int.Parse(myReader["CID"].ToString()), myReader["name"].ToString()));
+                }
+
+                myReader.Close();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return null;
+            }
+        }
+
+        public static int GetIDFromCountry(string countryName)
+        {
+            try
+            {
+                SqlCommand myCommand = new SqlCommand("SELECT * FROM Countryes", myConnection);
+                SqlDataReader myReader = myCommand.ExecuteReader();
+                
+                while (myReader.Read())
+                {
+                    Country country = new Country(int.Parse(myReader["CID"].ToString()), myReader["name"].ToString());
+                    if(country.name == countryName)
+                    {
+                        myReader.Close();
+                        return country.ID;
+                    }
+                }
+
+                myReader.Close();
+                return -1;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return -1;
+            }
+        }
+
+        public static bool Register(string username, string email, string password, string profileName, int countryID)
+        {
+            try
+            {
+                SqlParameter myParam1 = new SqlParameter("@param1", SqlDbType.VarChar, username.Length);
+                myParam1.Value = username;
+
+                SqlParameter myParam2 = new SqlParameter("@param2", SqlDbType.VarChar, email.Length);
+                myParam2.Value = email;
+
+                SqlParameter myParam3 = new SqlParameter("@param3", SqlDbType.VarChar, password.Length);
+                myParam3.Value = password;
+
+                SqlParameter myParam4 = new SqlParameter("@param4", SqlDbType.VarChar, profileName.Length);
+                myParam4.Value = profileName;
+
+                SqlParameter myParam5 = new SqlParameter("@param5", SqlDbType.Int);
+                myParam5.Value = countryID;
+
+                SqlCommand myCommand = new SqlCommand("INSERT INTO Users (username,password,profileName,CID,email) VALUES (@param1,@param3,@param4,@param5,,@param2)", myConnection);
+                myCommand.Parameters.AddRange(new SqlParameter[] { myParam1, myParam2, myParam3, myParam4, myParam5 });
+
+                myCommand.ExecuteNonQuery();
+                MessageBox.Show("Register for " + username + " was a succes!");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return false;
+            }
         }
     }
 }

@@ -28,10 +28,25 @@ namespace Steam_Lite_Project
             }
             else
             {
-                if (SQLManager.CheckSignIn(textBox1.Text, textBox2.Text))
+                if (comboBox1.SelectedIndex == 0)
                 {
-                    MainForm form = new MainForm();
-                    form.Show();
+                    if (SQLManager.CheckSignIn(textBox1.Text, textBox2.Text, false))
+                    {
+                        MainForm form = new MainForm();
+                        form.Show();
+
+                        this.Hide();
+                    }
+                }
+                else if(comboBox1.SelectedIndex == 1)
+                {
+                    if (SQLManager.CheckSignIn(textBox1.Text, textBox2.Text, true))
+                    {
+                        //MainForm form = new MainForm();
+                        //form.Show();
+
+                        //this.Hide();
+                    }
                 }
             }
         }
