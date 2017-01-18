@@ -157,6 +157,67 @@ namespace Steam_Lite_Project
                 return false;
             }
         }
+
+        public static bool RegisterPublisher(string username, string email, string password, string publisherName, string companyName, string description)
+        {
+            try
+            {
+                SqlParameter myParam1 = new SqlParameter("@param1", SqlDbType.VarChar, username.Length);
+                myParam1.Value = username;
+
+                SqlParameter myParam2 = new SqlParameter("@param2", SqlDbType.VarChar, email.Length);
+                myParam2.Value = email;
+
+                SqlParameter myParam3 = new SqlParameter("@param3", SqlDbType.VarChar, password.Length);
+                myParam3.Value = password;
+
+                SqlParameter myParam4 = new SqlParameter("@param4", SqlDbType.VarChar, publisherName.Length);
+                myParam4.Value = publisherName;
+
+                SqlParameter myParam5 = new SqlParameter("@param5", SqlDbType.VarChar, companyName.Length);
+                myParam5.Value = companyName;
+
+                SqlParameter myParam6 = new SqlParameter("@param6", SqlDbType.VarChar, description.Length);
+                myParam6.Value = description;
+
+
+                SqlCommand myCommand = new SqlCommand("INSERT INTO Publishers (username,email,password,publisherName,companyName,description) VALUES (@param1,@param2,@param3,@param4,@param5,@param6)", myConnection);
+                myCommand.Parameters.AddRange(new SqlParameter[] { myParam1, myParam2, myParam3, myParam4, myParam5, myParam6 });
+
+                myCommand.ExecuteNonQuery();
+                MessageBox.Show("Register for " + username + " was a succes!");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return false;
+            }
+        }
+
+        public static List<GameItem> GetShopGames()
+        {
+            try
+            {
+                SqlCommand myCommand = new SqlCommand("SELECT * FROM Games", myConnection);
+                SqlDataReader myReader = myCommand.ExecuteReader();
+
+                List<GameItem> result = new List<GameItem>();
+
+                while (myReader.Read())
+                {
+                    result.Add(new GameItem(myReader["title"].ToString(), float.Parse(myReader["price"].ToString())));
+                }
+
+                myReader.Close();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return null;
+            }
+        }
     }
 }
 

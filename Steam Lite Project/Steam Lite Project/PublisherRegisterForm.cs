@@ -101,5 +101,14 @@ namespace Steam_Lite_Project
                 label9.Visible = true;
             }
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (SQLManager.RegisterPublisher(textBox1.Text, textBox2.Text, textBox3.Text, textBox5.Text, textBox6.Text, richTextBox1.Text))
+            {
+                this.Close();
+            }
+            else MessageBox.Show("Register failed!");
+        }
     }
 }

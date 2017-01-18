@@ -32,7 +32,7 @@ namespace Steam_Lite_Project
                 {
                     if (SQLManager.CheckSignIn(textBox1.Text, textBox2.Text, false))
                     {
-                        MainForm form = new MainForm();
+                        MainForm form = new MainForm(textBox1.Text, this);
                         form.Show();
 
                         this.Hide();
@@ -42,10 +42,10 @@ namespace Steam_Lite_Project
                 {
                     if (SQLManager.CheckSignIn(textBox1.Text, textBox2.Text, true))
                     {
-                        //MainForm form = new MainForm();
-                        //form.Show();
+                        MainForm form = new MainForm(textBox1.Text, this);
+                        form.Show();
 
-                        //this.Hide();
+                        this.Hide();
                     }
                 }
             }
