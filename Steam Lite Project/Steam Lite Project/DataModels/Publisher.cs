@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Steam_Lite_Project.DataModels
 {
-    class Publisher
+    public class Publisher
     {
         public int PID;
         public string publisherName;

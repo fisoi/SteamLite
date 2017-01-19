@@ -245,6 +245,61 @@ namespace Steam_Lite_Project
             }
         }
 
+        public static List<GameItem> GetPublisherGames(Publisher publisher)
+        {
+            try
+            {
+                SqlCommand myCommand = new SqlCommand("SELECT * FROM Games WHERE PID=" + publisher.PID, myConnection);
+                SqlDataReader myReader = myCommand.ExecuteReader();
+
+                List<GameItem> result = new List<GameItem>();
+
+                while (myReader.Read())
+                {
+                    result.Add(new GameItem(myReader["title"].ToString(), float.Parse(myReader["price"].ToString())));
+                }
+
+                myReader.Close();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return null;
+            }
+        }
+
+        public static void AddGame(Publisher publisher, string title, string description, string price)
+        {
+            try
+            {
+                SqlParameter myParam1 = new SqlParameter("@param1", SqlDbType.Int);
+                myParam1.Value = publisher.PID;
+
+                SqlParameter myParam2 = new SqlParameter("@param2", SqlDbType.VarChar, title.Length);
+                myParam2.Value = title;
+
+                SqlParameter myParam3 = new SqlParameter("@param3", SqlDbType.VarChar, description.Length);
+                myParam3.Value = description;
+
+                SqlParameter myParam4 = new SqlParameter("@param4", SqlDbType.VarChar, price.Length);
+                myParam4.Value = price;
+
+                SqlParameter myParam5 = new SqlParameter("@param5", SqlDbType.DateTime);
+                myParam5.Value = DateTime.Today;
+
+                SqlCommand myCommand = new SqlCommand("INSERT INTO Games (SID,PID,title,description,price,releaseDate,reviewsAmount,reviewScore)" +
+                                                      " VALUES (1,@param1,@param2,@param3,@param4,@param5,0,0)", myConnection);
+                myCommand.Parameters.AddRange(new SqlParameter[] { myParam1, myParam2, myParam3, myParam4, myParam5 });
+
+                myCommand.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+
         public static List<GameItem> GetShopGames()
         {
             try
@@ -420,6 +475,7 @@ namespace Steam_Lite_Project
                 return null;
             }
         }
+        
 
         public static Game GetGame(string gameTitle)
         {
@@ -500,6 +556,33 @@ namespace Steam_Lite_Project
                 return null;
             }
         }
+
+        public static Publisher GetPublisherFromUsername(string username)
+        {
+            try
+            {
+                SqlParameter myParam1 = new SqlParameter("@param1", SqlDbType.VarChar, username.Length);
+                myParam1.Value = username;
+
+                SqlCommand myCommand = new SqlCommand("SELECT * FROM Publishers WHERE username=@param1", myConnection);
+                myCommand.Parameters.Add(myParam1);
+
+                SqlDataReader myReader = myCommand.ExecuteReader();
+
+                myReader.Read();
+                Publisher result = new Publisher(int.Parse(myReader["PID"].ToString()), myReader["publisherName"].ToString(),
+                    myReader["companyName"].ToString(), myReader["description"].ToString());
+
+                myReader.Close();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return null;
+            }
+        }
+        
 
         public static string GetState(int ID)
         {

@@ -42,7 +42,7 @@ namespace Steam_Lite_Project
                 {
                     if (SQLManager.CheckSignIn(textBox1.Text, textBox2.Text, true))
                     {
-                        MainForm form = new MainForm(textBox1.Text, this);
+                        PublisherMainForm form = new PublisherMainForm(this, SQLManager.GetPublisherFromUsername(textBox1.Text));
                         form.Show();
 
                         this.Hide();
