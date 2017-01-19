@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 using System.Data;
+using System.Runtime.CompilerServices;
 using Steam_Lite_Project.DataModels;
 
 namespace Steam_Lite_Project
@@ -121,6 +122,33 @@ namespace Steam_Lite_Project
             }
         }
 
+        public static string GetCountryFromID(string CID)
+        {
+            try
+            {
+                SqlCommand myCommand = new SqlCommand("SELECT * FROM Countries", myConnection);
+                SqlDataReader myReader = myCommand.ExecuteReader();
+
+                while (myReader.Read())
+                {
+                    Country country = new Country(int.Parse(myReader["CID"].ToString()), myReader["name"].ToString());
+                    if (country.ID.ToString() == CID)
+                    {
+                        myReader.Close();
+                        return country.name;
+                    }
+                }
+
+                myReader.Close();
+                return null;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return null;
+            }
+        }
+
         public static bool Register(string username, string email, string password, string profileName, int countryID)
         {
             try
@@ -151,6 +179,32 @@ namespace Steam_Lite_Project
             {
                 MessageBox.Show(ex.ToString());
                 return false;
+            }
+        }
+
+        public static User GetUser(string username)
+        {
+            try
+            {
+                SqlParameter myParam1 = new SqlParameter("@param1", SqlDbType.VarChar, username.Length);
+                myParam1.Value = username;
+
+                SqlCommand myCommand = new SqlCommand("SELECT * FROM Users WHERE username=@param1", myConnection);
+                myCommand.Parameters.Add(myParam1);
+
+                SqlDataReader myReader = myCommand.ExecuteReader();
+
+                myReader.Read();
+                User result = new User(myReader["UID"].ToString(), myReader["CID"].ToString(), myReader["username"].ToString(), 
+                    myReader["password"].ToString(), myReader["profileName"].ToString(), myReader["email"].ToString());
+
+                myReader.Close();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return null;
             }
         }
 
@@ -279,6 +333,33 @@ namespace Steam_Lite_Project
             }
         }
 
+        public static string ProfileNameFromUID(string ID)
+        {
+            try
+            {
+                //GET USER ID FROM USERNAME
+                SqlParameter myParam1 = new SqlParameter("@param1", SqlDbType.VarChar, ID.Length);
+                myParam1.Value = ID;
+
+                SqlCommand myCommand = new SqlCommand("SELECT * FROM Users WHERE UID=@param1", myConnection);
+                myCommand.Parameters.Add(myParam1);
+
+                SqlDataReader myReader = myCommand.ExecuteReader();
+
+                myReader.Read();
+                string userID = myReader["profileName"].ToString();
+
+                myReader.Close();
+
+                return userID;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return null;
+            }
+        }
+
         public static void InsertWish(string username, string gameTitle)
         {
             try
@@ -338,7 +419,6 @@ namespace Steam_Lite_Project
                 MessageBox.Show(ex.ToString());
                 return null;
             }
-
         }
 
         public static Game GetGame(string gameTitle)
@@ -487,6 +567,86 @@ namespace Steam_Lite_Project
             {
                 MessageBox.Show(ex.ToString());
                 return null;
+            }
+        }
+
+        public static List<string> GetFriends(string UID)
+        {
+            try
+            {
+                //GET FRIEND ID's
+                SqlCommand myCommand = new SqlCommand("SELECT * FROM UserFriends WHERE UID1=" + UID, myConnection);
+                SqlDataReader myReader = myCommand.ExecuteReader();
+
+                List<string> friendsIDs = new List<string>();
+
+                while (myReader.Read())
+                {
+                    friendsIDs.Add(myReader["UID2"].ToString());
+                }
+
+                myReader.Close();
+
+                List<string> result = new List<string>();
+
+                foreach (string ID in friendsIDs)
+                {
+                    result.Add(ProfileNameFromUID(ID));
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return null;
+            }
+        }
+
+        public static void UpdateReview(Game game)
+        {
+            try
+            {
+                SqlCommand myCommand = new SqlCommand("UPDATE Games SET reviewsAmount=" + game.reviewsAmount.ToString() + ",reviewScore=" + game.reviewScore.ToString() + " WHERE GID=" + game.GID, myConnection);
+                myCommand.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+
+        public static void UpdateUserProfile(User user)
+        {
+            try
+            {
+                SqlCommand myCommand = new SqlCommand("UPDATE Users SET password='" + user.password + "',profileName='" + user.profileName + "',CID=" + user.CID + " WHERE UID=" + user.UID, myConnection);
+                myCommand.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+
+        public static void InsertInLibrary(User user, Game game)
+        {
+            try
+            {
+                SqlParameter myParam1 = new SqlParameter("@param1", SqlDbType.VarChar, user.UID.Length);
+                myParam1.Value = user.UID;
+
+                SqlParameter myParam2 = new SqlParameter("@param2", SqlDbType.Int);
+                myParam2.Value = game.GID;
+                
+                SqlCommand myCommand = new SqlCommand("INSERT INTO UserGames (UID,GID,installed,hoursPlayed) VALUES (@param1,@param2,0,0)", myConnection);
+                myCommand.Parameters.AddRange(new SqlParameter[] { myParam1, myParam2 });
+
+                myCommand.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
             }
         }
     }

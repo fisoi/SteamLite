@@ -51,6 +51,7 @@
     <Compile Include="DataModels\GameItem.cs" />
     <Compile Include="DataModels\LibraryGame.cs" />
     <Compile Include="DataModels\Publisher.cs" />
+    <Compile Include="DataModels\User.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
